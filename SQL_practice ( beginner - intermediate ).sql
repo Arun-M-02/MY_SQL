@@ -1,0 +1,491 @@
+-- =====================================================
+-- DATABASE
+-- =====================================================
+CREATE DATABASE company_data;
+USE company_data;
+
+-- =====================================================
+-- 1) DEPARTMENTS
+-- =====================================================
+CREATE TABLE departments (
+  dept_id INT PRIMARY KEY,
+  dept_name VARCHAR(100) NOT NULL,
+  location VARCHAR(100) NOT NULL
+);
+
+INSERT INTO departments VALUES
+(1, 'HR', 'Chennai'),
+(2, 'IT', 'Bangalore'),
+(3, 'Finance', 'Delhi'),
+(4, 'Marketing', 'Mumbai');
+
+-- =====================================================
+-- 2) EMPLOYEES
+-- =====================================================
+CREATE TABLE employees (
+  emp_id INT PRIMARY KEY,
+  emp_name VARCHAR(100) NOT NULL,
+  gender VARCHAR(10),
+  dept_id INT,
+  hire_date DATE,
+  FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
+);
+
+INSERT INTO employees VALUES
+(101, 'Rahul', 'Male', 1, '2022-05-10'),
+(102, 'Priya', 'Female', 2, '2021-03-15'),
+(103, 'Karthik', 'Male', 3, '2023-01-10'),
+(104, 'Sneha', 'Female', 2, '2020-11-25'),
+(105, 'Varun', 'Male', 4, '2022-07-19'),
+(106, 'Divya', 'Female', 1, '2023-05-28');
+
+-- =====================================================
+-- 3) SALARIES
+-- =====================================================
+CREATE TABLE salaries (
+  emp_id INT,
+  salary INT NOT NULL,
+  effective_date DATE,
+  FOREIGN KEY (emp_id) REFERENCES employees(emp_id)
+);
+
+INSERT INTO salaries VALUES
+(101, 45000, '2024-01-01'),
+(102, 65000, '2024-01-01'),
+(103, 55000, '2024-01-01'),
+(104, 70000, '2024-01-01'),
+(105, 48000, '2024-01-01'),
+(106, 50000, '2024-01-01');
+
+-- =====================================================
+-- 4) TITLES
+-- =====================================================
+CREATE TABLE titles (
+  emp_id INT,
+  title VARCHAR(100),
+  title_start DATE,
+  FOREIGN KEY (emp_id) REFERENCES employees(emp_id)
+);
+
+INSERT INTO titles VALUES
+(101, 'HR Executive', '2022-05-10'),
+(102, 'Software Engineer', '2021-03-15'),
+(103, 'Financial Analyst', '2023-01-10'),
+(104, 'Senior Developer', '2022-03-01'),
+(105, 'Marketing Specialist', '2022-07-19'),
+(106, 'HR Coordinator', '2023-05-28');
+
+-- =====================================================
+-- 5) PROJECTS
+-- =====================================================
+CREATE TABLE projects (
+  project_id INT PRIMARY KEY,
+  project_name VARCHAR(200),
+  dept_id INT,
+  budget INT,
+  FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
+);
+
+INSERT INTO projects VALUES
+(501, 'Recruitment Automation', 1, 500000),
+(502, 'Cloud Migration', 2, 1500000),
+(503, 'Annual Audit', 3, 700000),
+(504, 'Brand Growth Campaign', 4, 400000);
+
+-- =====================================================
+-- 6) EMPLOYEE_PROJECTS (many-to-many)
+-- =====================================================
+CREATE TABLE employee_projects (
+  emp_id INT,
+  project_id INT,
+  assigned_date DATE,
+  FOREIGN KEY (emp_id) REFERENCES employees(emp_id),
+  FOREIGN KEY (project_id) REFERENCES projects(project_id)
+);
+
+INSERT INTO employee_projects VALUES
+(101, 501, '2023-01-01'),
+(102, 502, '2022-02-01'),
+(103, 503, '2023-05-01'),
+(104, 502, '2022-04-10'),
+(105, 504, '2023-02-15'),
+(106, 501, '2023-08-01');
+
+-- =====================================================
+-- 7) ATTENDANCE
+-- =====================================================
+CREATE TABLE attendance (
+  att_id INT PRIMARY KEY,
+  emp_id INT,
+  login_time DATETIME,
+  logout_time DATETIME,
+  FOREIGN KEY (emp_id) REFERENCES employees(emp_id)
+);
+
+INSERT INTO attendance VALUES
+(1, 101, '2025-02-01 09:00:00', '2025-02-01 18:00:00'),
+(2, 102, '2025-02-01 09:30:00', '2025-02-01 17:00:00'),
+(3, 103, '2025-02-01 10:00:00', '2025-02-01 18:30:00'),
+(4, 104, '2025-02-01 09:15:00', '2025-02-01 19:00:00');
+
+-- Start fresh
+
+DROP DATABASE IF EXISTS company_data;
+CREATE DATABASE company_data;
+USE company_data;
+
+-- =====================================================
+-- 1) DEPARTMENTS
+-- =====================================================
+CREATE TABLE departments (
+  dept_id INT PRIMARY KEY,
+  dept_name VARCHAR(100) NOT NULL,
+  location VARCHAR(100) NOT NULL
+);
+
+INSERT INTO departments VALUES
+(1, 'HR', 'Chennai'),
+(2, 'IT', 'Bangalore'),
+(3, 'Finance', 'Delhi'),
+(4, 'Marketing', 'Mumbai');
+
+-- =====================================================
+-- 2) EMPLOYEES
+-- =====================================================
+CREATE TABLE employees (
+  emp_id INT PRIMARY KEY,
+  emp_name VARCHAR(100) NOT NULL,
+  gender VARCHAR(10),
+  dept_id INT,
+  hire_date DATE,
+  FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
+);
+
+INSERT INTO employees VALUES
+(101, 'Rahul', 'Male', 1, '2022-05-10'),
+(102, 'Priya', 'Female', 2, '2021-03-15'),
+(103, 'Karthik', 'Male', 3, '2023-01-10'),
+(104, 'Sneha', 'Female', 2, '2020-11-25'),
+(105, 'Varun', 'Male', 4, '2022-07-19'),
+(106, 'Divya', 'Female', 1, '2023-05-28');
+
+-- =====================================================
+-- 3) SALARIES
+-- =====================================================
+CREATE TABLE salaries (
+  emp_id INT,
+  salary INT NOT NULL,
+  effective_date DATE,
+  FOREIGN KEY (emp_id) REFERENCES employees(emp_id)
+);
+
+INSERT INTO salaries VALUES
+(101, 45000, '2024-01-01'),
+(102, 65000, '2024-01-01'),
+(103, 55000, '2024-01-01'),
+(104, 70000, '2024-01-01'),
+(105, 48000, '2024-01-01'),
+(106, 50000, '2024-01-01');
+
+-- =====================================================
+-- 4) TITLES
+-- =====================================================
+CREATE TABLE titles (
+  emp_id INT,
+  title VARCHAR(100),
+  title_start DATE,
+  FOREIGN KEY (emp_id) REFERENCES employees(emp_id)
+);
+
+INSERT INTO titles VALUES
+(101, 'HR Executive', '2022-05-10'),
+(102, 'Software Engineer', '2021-03-15'),
+(103, 'Financial Analyst', '2023-01-10'),
+(104, 'Senior Developer', '2022-03-01'),
+(105, 'Marketing Specialist', '2022-07-19'),
+(106, 'HR Coordinator', '2023-05-28');
+
+-- =====================================================
+-- 5) PROJECTS
+-- =====================================================
+CREATE TABLE projects (
+  project_id INT PRIMARY KEY,
+  project_name VARCHAR(200),
+  dept_id INT,
+  budget INT,
+  FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
+);
+
+INSERT INTO projects VALUES
+(501, 'Recruitment Automation', 1, 500000),
+(502, 'Cloud Migration', 2, 1500000),
+(503, 'Annual Audit', 3, 700000),
+(504, 'Brand Growth Campaign', 4, 400000);
+
+-- =====================================================
+-- 6) EMPLOYEE_PROJECTS (many-to-many) - MAKE SURE THIS RUNS
+-- =====================================================
+CREATE TABLE employee_projects (
+  emp_id INT,
+  project_id INT,
+  assigned_date DATE,
+  FOREIGN KEY (emp_id) REFERENCES employees(emp_id),
+  FOREIGN KEY (project_id) REFERENCES projects(project_id)
+);
+
+INSERT INTO employee_projects VALUES
+(101, 501, '2023-01-01'),
+(102, 502, '2022-02-01'),
+(103, 503, '2023-05-01'),
+(104, 502, '2022-04-10'),
+(105, 504, '2023-02-15'),
+(106, 501, '2023-08-01');
+
+-- =====================================================
+-- 7) ATTENDANCE
+-- =====================================================
+CREATE TABLE attendance (
+  att_id INT PRIMARY KEY,
+  emp_id INT,
+  login_time DATETIME,
+  logout_time DATETIME,
+  FOREIGN KEY (emp_id) REFERENCES employees(emp_id)
+);
+
+INSERT INTO attendance VALUES
+(1, 101, '2025-02-01 09:00:00', '2025-02-01 18:00:00'),
+(2, 102, '2025-02-01 09:30:00', '2025-02-01 17:00:00'),
+(3, 103, '2025-02-01 10:00:00', '2025-02-01 18:30:00'),
+(4, 104, '2025-02-01 09:15:00', '2025-02-01 19:00:00');
+
+
+/* 1. SELECT — List all columns from employees. */
+
+SELECT * FROM employees;
+
+/* 2. WHERE — Show employees hired after 2022-01-01. */
+
+SELECT * FROM employees
+WHERE hire_date > '2022-01-01';
+
+/* 3. AND/OR/NOT — Show employees in dept 2 or dept 4 with hire_date before 2023-01-01. */
+
+SELECT * FROM employees
+ WHERE dept_id BETWEEN 2 AND 4 
+ AND hire_date < '2023-01-01';
+ 
+ /* 4. ORDER BY — Show emp_name and hire_date sorted by hire_date descending. */
+ 
+ SELECT emp_name, hire_date 
+ FROM employees
+ ORDER BY hire_date DESC;
+
+/* 5. LIMIT — Show the first 3 employees ordered by emp_id. */
+
+SELECT * FROM employees
+ORDER BY emp_id
+LIMIT 3;
+
+/* 6. INSERT — Insert a new department (id 5, name Operations, location Hyderabad) — write the INSERT statement. */
+
+INSERT INTO departments
+ (dept_id, dept_name, location)
+ VALUES	
+  (5, 'Operations', 'Hyderabad')
+  ;
+
+SELECT * FROM departments;
+
+/* 7. UPDATE — Increase salaries.salary by 5% for emp_id = 102. */
+
+UPDATE salaries 
+ SET salary = salary * 1.05
+  WHERE emp_id = 102;
+  
+/* 8. DELETE — Delete the projects row where project_id = 504. (write & then restore with an INSERT) */
+
+-- Deleting employee project prior to run the code as it was freign key with employees table
+
+DELETE FROM employee_projects WHERE project_id = 504;
+USE company_data;
+SHOW TABLES;
+
+-- Deleting project_id as per QA
+
+DELETE FROM projects 
+WHERE project_id = 504;
+
+-- Restore project
+
+INSERT INTO projects VALUES (504, 'Brand Growth Campaign', 4, 400000);
+
+-- Restore any employee assignments if needed
+
+INSERT INTO employee_projects VALUES (105, 504, '2023-02-15');
+
+/* 9. IS NULL — List employees with NULL dept_id (if any). */
+
+SELECT * FROM employees
+ WHERE dept_id IS NULL;
+
+/* 10. MIN / MAX — Show min and max salary from salaries. */
+
+--- Minimum_salary---
+SELECT min(salary) from salaries;
+--- Maximum_salary---
+SELECT max(salary) from salaries;
+
+/* 11. COUNT / AVG / SUM — For salaries, show COUNT(*), AVG(salary), and SUM(salary). */
+
+-- Count_function --
+SELECT COUNT(*) FROM salaries;
+-- Averge function --
+SELECT AVG(salary) FROM salaries;
+-- Sum Function --
+SELECT SUM(salary) FROM salaries;
+
+/* 12. LIKE — Find employees whose name starts with 'R'.; */
+
+SELECT emp_name FROM employees
+WHERE emp_name like 'R%' ;
+
+/* 13. IN — Show employees whose dept_id IN (1,3). */
+
+SELECT * FROM employees
+WHERE dept_id in (1,3);
+
+/* 14. BETWEEN — Show employees with hire_date BETWEEN 2021-01-01 and 2023-12-31. */
+
+SELECT emp_name as 'Employee Name', hire_date as 'Hire Date'
+ FROM employees
+  WHERE hire_date BETWEEN '2021-01-01' 
+   AND '2023-12-31';
+   
+/* 15. AS (alias) — Select emp_name AS Employee, hire_date AS Joined. */
+
+SELECT emp_name 'Employee', hire_date 'Joined'
+ FROM employees;
+ 
+ /* 16. INNER JOIN — Show emp_name with dept_name (employees → departments). */
+ 
+ SELECT e.emp_name, d.dept_name
+  FROM employees e
+INNER JOIN departments d
+ ON e.dept_id = d.dept_id;
+ 
+ /* 17. LEFT JOIN — Show all departments and any employee names (departments may have NULL employee). */
+ 
+ SELECT d.dept_name, e.emp_name
+  FROM departments d
+  LEFT JOIN employees e
+  ON d.dept_id = e.dept_id;
+  
+  /* 18. RIGHT JOIN — Show all employees and department names (use RIGHT JOIN variant). */
+  
+  SELECT e.emp_name, d.dept_name
+  FROM employees e
+  RIGHT JOIN departments d
+  ON e.dept_id = d.dept_id;
+    
+  /* 19. CROSS JOIN — Produce the Cartesian product of employees (first 3 rows) and departments. */
+  
+SELECT e.emp_id, e.emp_name, d.dept_id, d.dept_name, d.location
+ FROM (SELECT * FROM employees ORDER BY emp_id LIMIT 3) e
+ CROSS JOIN departments d
+ ORDER BY e.emp_id, d.dept_id;
+ 
+ /* 20. SELF JOIN — Show employee and manager pair — simulate using employee_projects? (use emp_id pairing example). */
+ 
+ SELECT 
+   e.emp_id AS employee_id,
+   e.emp_name AS employee_name,
+   pr.project_name
+FROM employees e
+JOIN employee_projects p 
+   ON e.emp_id = p.emp_id
+JOIN projects pr
+   ON p.project_id = pr.project_id
+ORDER BY e.emp_id, pr.project_name;
+
+/* 21. UNION — Combine a list of emp_name and a list of project_name into one column name. */
+
+SELECT emp_name FROM employees
+UNION
+SELECT project_name FROM projects;
+
+/* 22. GROUP BY — For employees grouped by dept_id, show COUNT(emp_id) per department. */
+
+SELECT dept_id, COUNT(emp_id) as 'Employee Count'
+FROM employees
+GROUP BY dept_id;
+
+/* 23. HAVING — Show dept_id with COUNT(emp_id) > 1. */
+
+SELECT dept_id, COUNT(emp_id) as 'Employee Count'
+FROM employees
+GROUP BY dept_id
+HAVING COUNT(emp_id) > 1;
+
+/* 24. EXISTS — Show dept_name from departments where at least one employee exists (use EXISTS). */
+
+SELECT dept_name 
+FROM departments d
+WHERE EXISTS (SELECT * FROM employees e WHERE e.dept_id = d.dept_id );
+
+/* 25. ANY — Show employees whose salary is greater than ANY salary in dept 3. */
+
+SELECT e.emp_name
+FROM employees e
+JOIN salaries s ON e.emp_id = s.emp_id
+where s.salary = ANY (
+  SELECT s2.salary
+	  FROM salaries s2
+	  JOIN employees e2 ON s2.emp_id = e2.emp_id
+	  WHERE e2.dept_id = 3
+);
+
+/* 26. ALL — Show employees whose salary is greater than ALL salaries in dept 3. */
+
+SELECT e.emp_name
+FROM employees e
+JOIN salaries s ON e.emp_id = s.emp_id
+where s.salary > ALL (
+  SELECT s2.salary
+	  FROM salaries s2
+	  JOIN employees e2 ON s2.emp_id = e2.emp_id
+	  WHERE e2.dept_id = 3
+);
+
+/* 27. CASE — Add Salary_Level column: <50000 = 'Low', 50000–65000 = 'Medium', >65000 = 'High' for each employee (use salaries). */
+
+SELECT e.emp_name ,
+ s.salary,
+		CASE
+		 WHEN salary >= 65000 THEN 'High'
+		 WHEN salary BETWEEN 50000 AND 65000 THEN 'Medium'
+		 ELSE 'Low'
+		END AS salary_level
+FROM employees e
+JOIN salaries s ON e.emp_id = s.emp_id;
+
+/* 28. COALESCE — Show emp_name and city with COALESCE(city, 'Not Provided'). */
+
+SELECT e.emp_name, COALESCE(d.location, 'Not Provided') AS city
+FROM employees e
+JOIN departments d ON
+e.dept_id = d.dept_id;
+
+/* 29. Comments / Operators — Write a query with an inline comment and an arithmetic column: salary * 1.1 AS salary_inc. */
+
+SELECT e.emp_name, 
+ ROUND((s.salary * 1.10)) as salary_increment
+FROM employees e
+JOIN salaries s
+ ON e.emp_id = s.emp_id;
+ 
+ /* 30. Date function (basic) — Show employees and YEAR(hire_date) as hire_year. */
+ 
+ SELECT emp_name, YEAR(hire_date) AS hire_date
+ FROM employees;
+ 
+--- --- --- --- --- END  ---  --- --- --- --- ---
